@@ -129,16 +129,16 @@ To train the model, I used softmax with binary cross entropy loss. I used RMSpro
 The code for calculating the accuracy of the model is located in the tenth cell of the Ipython notebook.
 
 My final model results were:
-* training set accuracy of 99.49%
-* validation set accuracy of 99.63%
-* test set accuracy of 99.55%
+* training set accuracy of 99.45%
+* validation set accuracy of 99.66%
+* test set accuracy of 99.58%
 
 If an iterative approach was chosen:
 * The first architecture that I tried was LeNet architecture that had two 5x5 convolutional layers followed by three fully connected layers. It gave a validation accuracy of ~89%.
 * Since the LeNet architecture was built to recognize only 10 classes and we have 43 classes, model was not able to capture all the required features with just two convolution layers. Obviously we need some changes with the architecture.
 * I added two more convolution layers, which gets a total of 4 convolution layers. 3 of them have a filter of size 3x3, and the fourth convolution layer has a filter of size 1x1. I also increased the number of feature maps to 32, 64, 128, and 256 respectively for each convolution layer. Finally, reduced the number of feature maps of first fully connected layer to 64, and increased the number of feature maps of final fully connected layer to 43. This increased the validation accuracy to 96.76% after 25 Epochs, but it decreased after that when Training accuracy kept on increasing upto 99%. This indicated that the model is overfitting.
 * Then I added a dropout layer followed by the first fully connected layer with drop probability of 65% (This was chosen after many trying different values for many iterations). This increased the validation accuracy to ~98.33%.
-* Finally, I tried data augmentation techniques, on the training and validation data, such as rotation, intensity variation, zoom-in/zoom-out. This got me the best validation accuracy of 99.63%.
+* Finally, I tried data augmentation techniques, on the training and validation data, such as rotation, intensity variation, zoom-in/zoom-out. This got me the best validation accuracy of 99.66%.
 
 
 ###Test a Model on New Images
@@ -147,8 +147,15 @@ If an iterative approach was chosen:
 
 Here are five German traffic signs that I found on the web after transforming them with random rotation angle and gaussian noise:
 
-![alt text][image4] ![alt text][image5] ![alt text][image6] 
-![alt text][image7] ![alt text][image8]
+![alt text][image3]
+
+![alt text][image4]
+
+![alt text][image5]
+
+![alt text][image6] 
+
+![alt text][image7]
 
 The first image might be difficult to classify because it's been rotated and gaussian noise been added.
 
