@@ -6,6 +6,11 @@ import cv2
 import numpy as np
 from sklearn.model_selection import train_test_split
 
+import tensorflow as tf
+from keras.models import Sequential
+from keras.layers import Flatten, Dense, Lambda, Activation, Dropout
+from keras.layers import Convolution2D, MaxPooling2D, ZeroPadding2D, Cropping2D
+import keras.backend.tensorflow_backend as K
 
 samples = []
 for batch in os.listdir('./data/'):
@@ -60,3 +65,31 @@ for image, measurement in zip(images, measurements):
     augmented_measurements.append(measurement)
     augmented_images.append(cv2.flip(image, 1))
     augmented_measurements.append(measurement * -1.0)
+
+model = Sequential()
+
+model.add(Lambda(lambda x: (x / 255.0) - 0.5, input_shape=(160,320,3)))
+model.add(Cropping2D(cropping=((70, 25), (0, 0))))
+
+model.add(Convolution2D(24, 3, 3, border_mode='same', subsample=(2,2), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Convolution2D(36, 3, 3, border_mode='same', subsample=(2,2), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Convolution2D(48, 3, 3, border_mode='same', subsample=(2,2), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Convolution2D(64, 3, 3, border_mode='same', activation='relu'))
+model.add(Convolution2D(128, 3, 3, border_mode='same', activation='relu'))
+model.add(Convolution2D(256, 2, 2, border_mode='same', activation='relu'))
+model.add(Dropout(0.5))
+
+model.add(Flatten())
+model.add(Dense(500, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(100, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(20, activation='relu'))
+model.add(Dense(1))
+
+model.compile(loss='mse', optimizer='adam')
+
+model.fit(X_train, y_train, validation_split=0.20, shuffle=True, nb_epoch=5)
