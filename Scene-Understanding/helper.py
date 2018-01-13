@@ -138,3 +138,19 @@ def save_inference_samples(runs_dir, data_dir, sess, image_shape, logits, keep_p
         sess, logits, keep_prob, input_image, os.path.join(data_dir, 'data_road/testing'), image_shape)
     for name, image in image_outputs:
         scipy.misc.imsave(os.path.join(output_dir, name), image)
+
+def augment_data(data_folder):
+    count = 0
+    image_paths = glob(os.path.join(data_folder, 'image_2', '*.png'))
+    label_paths = {
+        re.sub(r'_(lane|road)_', '_', os.path.basename(path)): path
+        for path in glob(os.path.join(data_folder, 'gt_image_2', '*_road_*.png'))}
+    for image in image_paths:
+        #flip horizontally
+        nimage = np.flip(scipy.misc.imread(image), axis=1)
+        nlabel = np.flip(scipy.misc.imread(label_paths[os.path.basename(image)]), axis=1)
+        count += 1
+        nimage_name = os.path.splitext(image)[0] + str(count) + '.png'
+        nlabel_name = os.path.splitext(label_paths[os.path.basename(image)])[0] + str(count) + '.png'
+        scipy.misc.toimage(nimage).save(nimage_name)
+        scipy.misc.toimage(nlabel).save(nlabel_name)
