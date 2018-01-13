@@ -111,9 +111,9 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
     """
     for epoch in range(epochs):
         for batch, (image, label) in enumerate(get_batches_fn(batch_size)):
-            feed_dict = {input_image: image, correct_label: label, keep_prob: 0.5, learning_rate: 1e-5}
+            feed_dict = {input_image: image, correct_label: label, keep_prob: 0.75, learning_rate: 1e-5}
             _, loss = sess.run([train_op, cross_entropy_loss], feed_dict=feed_dict)
-            print("Epoch {}".format(epoch), " Batch {}".format(batch), " loss: {:.4f}".format(loss))
+            print("Epoch {}".format(epoch + 1), " Batch {}".format(batch), " loss: {:.4f}".format(loss))
 tests.test_train_nn(train_nn)
 
 
@@ -141,7 +141,7 @@ def run():
         #  https://datascience.stackexchange.com/questions/5224/how-to-prepare-augment-images-for-neural-network
 
         # TODO: Build NN using load_vgg, layers, and optimize function
-        epochs = 6
+        epochs = 90
         batch_size = 2
         learning_rate = tf.placeholder(tf.float32)
         correct_label = tf.placeholder(tf.int32, [None, None, None, num_classes])
@@ -163,6 +163,7 @@ def run():
 
 
 if __name__ == '__main__':
+    
     # Check TensorFlow Version
     assert LooseVersion(tf.__version__) >= LooseVersion(
         '1.0'), 'Please use TensorFlow version 1.0 or newer.  You are using {}'.format(tf.__version__)
@@ -173,15 +174,5 @@ if __name__ == '__main__':
         warnings.warn('No GPU found. Please use a GPU to train your neural network.')
     else:
         print('Default GPU Device: {}'.format(tf.test.gpu_device_name()))
-
-    # Print start screen
-    print("*** Semantic Segmentation by Max Ritter ***")
-
-    # Eventually run some tests
-    # tests.test_for_kitti_dataset(os.path.abspath('data'))
-    # tests.test_load_vgg(load_vgg, tf)
-    # tests.test_layers(layers)
-    # tests.test_optimize(optimize)
-    # tests.test_train_nn(train_nn)
     
     run()
