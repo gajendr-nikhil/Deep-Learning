@@ -54,12 +54,9 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
     :param num_classes: Number of classes to classify
     :return: The Tensor for the last layer of output
     """
-    conv_1x1_l7 = tf.layers.conv2d(vgg_layer7_out, num_classes, 1, padding='same',
-                                   kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
-    conv_1x1_l4 = tf.layers.conv2d(vgg_layer4_out, num_classes, 1, padding='same',
-                                   kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
-    conv_1x1_l3 = tf.layers.conv2d(vgg_layer3_out, num_classes, 1, padding='same',
-                                   kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
+    conv_1x1_l7 = tf.layers.conv2d(vgg_layer7_out, num_classes, 1, padding='same')#,kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
+    conv_1x1_l4 = tf.layers.conv2d(vgg_layer4_out, num_classes, 1, padding='same')#,kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
+    conv_1x1_l3 = tf.layers.conv2d(vgg_layer3_out, num_classes, 1, padding='same')#, kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
     
     output = tf.layers.conv2d_transpose(conv_1x1_l7, num_classes, 4, 2, 'same',
                                         kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
@@ -111,7 +108,7 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
     """
     for epoch in range(epochs):
         for batch, (image, label) in enumerate(get_batches_fn(batch_size)):
-            feed_dict = {input_image: image, correct_label: label, keep_prob: 0.75, learning_rate: 1e-5}
+            feed_dict = {input_image: image, correct_label: label, keep_prob: 0.8, learning_rate: 1e-4}
             _, loss = sess.run([train_op, cross_entropy_loss], feed_dict=feed_dict)
             print("Epoch {}".format(epoch + 1), " Batch {}".format(batch), " loss: {:.4f}".format(loss))
 tests.test_train_nn(train_nn)
@@ -141,8 +138,8 @@ def run():
         #  https://datascience.stackexchange.com/questions/5224/how-to-prepare-augment-images-for-neural-network
 
         # TODO: Build NN using load_vgg, layers, and optimize function
-        epochs = 90
-        batch_size = 2
+        epochs = 20
+        batch_size = 1
         learning_rate = tf.placeholder(tf.float32)
         correct_label = tf.placeholder(tf.int32, [None, None, None, num_classes])
 
