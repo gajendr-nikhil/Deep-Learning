@@ -47,6 +47,9 @@ In order to gauge how well the model was working, I split my images into a train
 
 I found that my first model was overfitting. In order to avoid that, I reduced the complexity of the network and added dropout layers between fully connected layers.
 
+## Results
+I am able to achieve a Mean Squred Error of 2.86 on the testing set. Which means if the actual heading of a stop sign in 0 degrees, prediction will be in the range of (-1.69 to 1.69). Which is cool.
+
 ## Improvements
 I tried to augment data by changing brightness, and rotating the images. That seems to not help. The best way to get MSE <= 1 is by generating more real-ish data i.e., in the given images, find the best homography matrix (using RANSAC) between images with heading 0 degrees and the rest, QR decompose the Homography matrix to get the rotation matrix, then finally use this rotation matrix to rotate all the images with 0 degree heading to any heading (-80, 80) we want. 
 Now that we have more images, we can retrain the same network or add few more convolution and max pooling layers to reduce the MSE.
